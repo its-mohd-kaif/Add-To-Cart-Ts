@@ -1,24 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { createContext, useState } from "react";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import AddProduct from "./Components/AddProduct";
+import AddSetting from "./Components/AddSetting";
+import LandingPage from "./Components/LandingPage";
+import PlaceOrder from "./Components/PlaceOrder";
+
+export const productContext = createContext({});
+export const settingContext = createContext({});
 
 function App() {
+  const [product, setProduct] = useState([]);
+  const [setting, setSetting] = useState({});
+  let router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/product" element={<AddProduct />} />
+        <Route path="/order" element={<PlaceOrder />} />
+        <Route path="/setting" element={<AddSetting />} />
+      </>
+    )
+  );
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <productContext.Provider value={{ product, setProduct }}>
+        <settingContext.Provider value={{ setting, setSetting }}>
+          <RouterProvider router={router} />
+        </settingContext.Provider>
+      </productContext.Provider>
     </div>
   );
 }
